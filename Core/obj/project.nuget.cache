@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "bfHXu4d7kQLn6KS0EZCQ/QEtfdH8WZxIf0dWm6grI/mbnDlSDwZsfxCdcgOZ4o/aY7f11HZ02UTwJ8Enpwf95Q==",
+  "dgSpecHash": "j2TzJE6VAboneyoMTl29CbMvMxwg3bvsMPWRCXlSRQ+9vo3KbU6Uv+iSVElMcXJu7OOqHZpkPOP0sLpLUGNpGQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\dogus\\source\\repos\\eReconciliationBackendProject\\Core\\Core.csproj",
   "expectedPackageFiles": [
@@ -15,6 +15,7 @@
     "C:\\Users\\dogus\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\6.0.0\\microsoft.extensions.caching.abstractions.6.0.0.nupkg.sha512",
     "C:\\Users\\dogus\\.nuget\\packages\\microsoft.extensions.caching.memory\\6.0.1\\microsoft.extensions.caching.memory.6.0.1.nupkg.sha512",
     "C:\\Users\\dogus\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\6.0.0\\microsoft.extensions.configuration.abstractions.6.0.0.nupkg.sha512",
+    "C:\\Users\\dogus\\.nuget\\packages\\microsoft.extensions.configuration.binder\\6.0.0\\microsoft.extensions.configuration.binder.6.0.0.nupkg.sha512",
     "C:\\Users\\dogus\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\6.0.0\\microsoft.extensions.dependencyinjection.6.0.0.nupkg.sha512",
     "C:\\Users\\dogus\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\6.0.0\\microsoft.extensions.dependencyinjection.abstractions.6.0.0.nupkg.sha512",
     "C:\\Users\\dogus\\.nuget\\packages\\microsoft.extensions.logging\\6.0.0\\microsoft.extensions.logging.6.0.0.nupkg.sha512",

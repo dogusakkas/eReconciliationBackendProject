@@ -67,3 +67,4 @@ C:\Users\dogus\source\repos\eReconciliationBackendProject\WebApi\bin\Debug\net6.
 C:\Users\dogus\source\repos\eReconciliationBackendProject\WebApi\bin\Debug\net6.0\Core.pdb
 C:\Users\dogus\source\repos\eReconciliationBackendProject\WebApi\bin\Debug\net6.0\DataAccess.pdb
 C:\Users\dogus\source\repos\eReconciliationBackendProject\WebApi\bin\Debug\net6.0\Entities.pdb
+C:\Users\dogus\source\repos\eReconciliationBackendProject\WebApi\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
