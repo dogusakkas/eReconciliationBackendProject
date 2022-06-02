@@ -53,7 +53,7 @@ namespace WebApi.Controllers
             }
 
             var registerResult = _authService.RegisterSecondAccount(userForRegister, userForRegister.Password);
-            var result = _authService.CreateAccessToken(registerResult.Data ,companyId);
+            var result = _authService.CreateAccessToken(registerResult.Data, companyId);
             if (registerResult.Success)
             {
                 return Ok(registerResult);
@@ -71,12 +71,40 @@ namespace WebApi.Controllers
                 return BadRequest(userToLogin.Message);
             }
 
-            var result = _authService.CreateAccessToken(userToLogin.Data,1);
+            var result = _authService.CreateAccessToken(userToLogin.Data, 1);
             if (result.Success)
             {
                 return Ok(result.Data);
             }
             return BadRequest(userToLogin.Message); ;
         }
+
+        [HttpGet("confirmuser")]
+        public IActionResult ConfirmUser(string value)
+        {
+            var user = _authService.GetByMailConfirmValue(value).Data;
+            user.MailConfirm = true;
+            user.MailConfirmDate = DateTime.Now;
+            var result = _authService.Update(user);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Message);
+        }
+        [HttpGet("sendConfirmEmail")]
+        public IActionResult SendConfirmEmail(int id)
+        {
+            var user = _authService.GetById(id).Data;
+            var result = _authService.SendConfirmEmail(user);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Message);
+
+        }
+
     }
 }

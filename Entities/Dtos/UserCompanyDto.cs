@@ -1,4 +1,5 @@
-﻿using Core.Entities.Concrete;
+﻿using Core.Entities;
+using Core.Entities.Concrete;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Entities.Dtos
 {
-    public class UserCompanyDto : User
+    public class UserCompanyDto : User, IDto
     {
         public int CompanyId { get; set; }
     }
