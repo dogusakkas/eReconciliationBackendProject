@@ -17,6 +17,8 @@ namespace Business.Constans
         public static string UserRegistered = "Kayıt Başarılı";
         public static string UserAllReadyExists = "Bu kullanıcı zaten var";
         public static string UserMailConfirmSuccessful = "Mailiniz başarıyla onaylandı.";
+        public static string MailAlreadyConfirm = "Mailiniz zaten onaylı.";
+        public static string MailConfirmTimeHasNotExpired = "Mail onayınızı 3 dakikada 1 defa gönderebilirsiniz ";
        
         public static string MailParameterUpdated= "Mail parametreleri başarıyla güncellendi";
         public static string MailSendSuccessful = "Mail başarıyla gönderildi";

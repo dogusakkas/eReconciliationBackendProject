@@ -24,10 +24,10 @@ namespace Business.Concrete
         private readonly IMailParameterService _mailParameterService;
         private readonly IMailService _mailService;
         private readonly IMailTemplateService _mailTemplateService;
-        
 
 
-        public AuthManager(IUserService userService, ITokenHelper tokenHelper, ICompanyService companyService, IMailParameterService mailParameterService, IMailService mailService, IMailTemplateService mailTemplateService) 
+
+        public AuthManager(IUserService userService, ITokenHelper tokenHelper, ICompanyService companyService, IMailParameterService mailParameterService, IMailService mailService, IMailTemplateService mailTemplateService)
         {
             _userService = userService;
             _tokenHelper = tokenHelper;
@@ -51,7 +51,7 @@ namespace Business.Concrete
         public IDataResult<AccessToken> CreateAccessToken(User user, int companyId)
         {
             var claims = _userService.GetClaims(user, companyId);
-            var accessToken = _tokenHelper.CreateToken(user,claims,companyId);
+            var accessToken = _tokenHelper.CreateToken(user, claims, companyId);
             return new SuccessDataResult<AccessToken>(accessToken);
         }
 
@@ -91,7 +91,7 @@ namespace Business.Concrete
                 MailConfirm = false,
                 MailConfirmDate = DateTime.Now,
                 MailConfirmValue = Guid.NewGuid().ToString(),
-                PasswordHash =passwordHash,
+                PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
                 Name = userForRegister.Name
             };
@@ -108,10 +108,10 @@ namespace Business.Concrete
                 CompanyId = company.Id,
                 IsActive = true,
                 MailConfirm = user.MailConfirm,
-                MailConfirmDate =user.MailConfirmDate,
-                MailConfirmValue =user.MailConfirmValue,
-                PasswordHash=user.PasswordHash,
-                PasswordSalt=user.PasswordSalt
+                MailConfirmDate = user.MailConfirmDate,
+                MailConfirmValue = user.MailConfirmValue,
+                PasswordHash = user.PasswordHash,
+                PasswordSalt = user.PasswordSalt
             };
 
             SendConfirmEmail(user);
@@ -143,9 +143,12 @@ namespace Business.Concrete
             };
 
             _mailService.SendMail(sendMailDto);
+
+            user.MailConfirmDate = DateTime.Now;
+            _userService.Update(user);
         }
 
-        public IDataResult<User> RegisterSecondAccount(UserForRegister userForRegister, string password)
+        public IDataResult<User> RegisterSecondAccount(UserForRegister userForRegister, string password, int companyId)
         {
             byte[] passwordHash, passwordSalt;
             HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
@@ -162,6 +165,11 @@ namespace Business.Concrete
                 Name = userForRegister.Name
             };
             _userService.Add(user);
+
+            _companyService.UserCompanyAdd(user.Id, companyId);
+
+            SendConfirmEmail(user);
+
             return new SuccessDataResult<User>(user, Messages.UserRegistered);
         }
 
@@ -173,7 +181,7 @@ namespace Business.Concrete
 
         public IResult UserExists(string email)
         {
-            if (_userService.GetByMail(email) !=null)
+            if (_userService.GetByMail(email) != null)
             {
                 return new ErrorResult(Messages.UserAllReadyExists);
             }
@@ -182,9 +190,34 @@ namespace Business.Concrete
 
         IResult IAuthService.SendConfirmEmail(User user)
         {
+            if (user.MailConfirm == true)
+            {
+                return new ErrorResult(Messages.MailAlreadyConfirm);
+            }
+
+            DateTime confirmMailDate = user.MailConfirmDate;
+            DateTime now = DateTime.Now;
+            if (confirmMailDate.ToShortDateString() == now.ToShortDateString())
+            {
+                if (confirmMailDate.Hour == now.Hour && confirmMailDate.AddMinutes(3).Minute <= now.Minute)
+                {
+                    SendConfirmEmail(user);
+                    return new SuccessResult(Messages.MailConfirmSendSuccessful);
+                }
+                else
+                {
+                    return new ErrorResult(Messages.MailConfirmTimeHasNotExpired);
+                }
+            }
+
             SendConfirmEmail(user);
             return new SuccessResult(Messages.MailConfirmSendSuccessful);
 
+        }
+
+        public IDataResult<UserCompany> GetCompany(int userId)
+        {
+            return new SuccessDataResult<UserCompany>(_companyService.GetCompany(userId).Data);
         }
     }
 }

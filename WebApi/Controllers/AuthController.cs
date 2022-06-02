@@ -44,7 +44,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("registerSecondAccount")]
-        public IActionResult RegisterSecondAccount(UserForRegister userForRegister, int companyId)
+        public IActionResult RegisterSecondAccount(UserForRegisterToSecondAccountDto userForRegister)
         {
             var userExists = _authService.UserExists(userForRegister.Email);
             if (!userExists.Success)
@@ -52,8 +52,9 @@ namespace WebApi.Controllers
                 return BadRequest(userExists.Message);
             }
 
-            var registerResult = _authService.RegisterSecondAccount(userForRegister, userForRegister.Password);
-            var result = _authService.CreateAccessToken(registerResult.Data, companyId);
+            var registerResult = _authService.RegisterSecondAccount(userForRegister, userForRegister.Password, userForRegister.CompanyId);
+
+            var result = _authService.CreateAccessToken(registerResult.Data, userForRegister.CompanyId);
             if (registerResult.Success)
             {
                 return Ok(registerResult);
@@ -70,13 +71,18 @@ namespace WebApi.Controllers
             {
                 return BadRequest(userToLogin.Message);
             }
-
-            var result = _authService.CreateAccessToken(userToLogin.Data, 1);
-            if (result.Success)
+            if (userToLogin.Data.IsActive)
             {
-                return Ok(result.Data);
+                var userCompany = _authService.GetCompany(userToLogin.Data.Id).Data;
+                var result = _authService.CreateAccessToken(userToLogin.Data, userCompany.CompanyId);
+                if (result.Success)
+                {
+                    return Ok(result.Data);
+                }
+                return BadRequest(userToLogin.Message);
             }
-            return BadRequest(userToLogin.Message); ;
+            return BadRequest("Kullanıcı pasif durumda. Aktif etmek için yöneticinize danışın");
+
         }
 
         [HttpGet("confirmuser")]
