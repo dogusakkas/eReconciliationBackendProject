@@ -68,3 +68,6 @@ C:\Users\dogus\source\repos\eReconciliationBackendProject\WebApi\bin\Debug\net6.
 C:\Users\dogus\source\repos\eReconciliationBackendProject\WebApi\bin\Debug\net6.0\DataAccess.pdb
 C:\Users\dogus\source\repos\eReconciliationBackendProject\WebApi\bin\Debug\net6.0\Entities.pdb
 C:\Users\dogus\source\repos\eReconciliationBackendProject\WebApi\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\dogus\source\repos\eReconciliationBackendProject\WebApi\bin\Debug\net6.0\FluentValidation.dll
+C:\Users\dogus\source\repos\eReconciliationBackendProject\WebApi\bin\Debug\net6.0\Castle.Core.dll
+C:\Users\dogus\source\repos\eReconciliationBackendProject\WebApi\bin\Debug\net6.0\Autofac.Extras.DynamicProxy.dll

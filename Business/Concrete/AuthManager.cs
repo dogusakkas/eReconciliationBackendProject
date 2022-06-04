@@ -1,5 +1,7 @@
 ﻿using Business.Abstract;
 using Business.Constans;
+using Business.ValidationRules.FluentValidation;
+using Core.CrossCuttingConcerns.Validation;
 using Core.Entities.Concrete;
 using Core.Utilities.Hashing;
 using Core.Utilities.Results.Abstract;
@@ -7,6 +9,7 @@ using Core.Utilities.Results.Concrete;
 using Core.Utilities.Security.JWT;
 using Entities.Concrete;
 using Entities.Dtos;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,8 +82,11 @@ namespace Business.Concrete
             return new SuccessDataResult<User>(userToCheck, Messages.SuccessfulLogin);
         }
 
+        
         public IDataResult<UserCompanyDto> Register(UserForRegister userForRegister, string password, Company company)
         {
+
+            //User oluşturuldu
             byte[] passwordHash, passwordSalt;
             HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
             var user = new User()
@@ -95,6 +101,14 @@ namespace Business.Concrete
                 PasswordSalt = passwordSalt,
                 Name = userForRegister.Name
             };
+
+
+            //Validation 
+
+            //ValidationTool.Validate(new UserValidator(), user);
+            //ValidationTool.Validate(new CompanyValidator(), company);
+
+
             _userService.Add(user);
             _companyService.Add(company);
             _companyService.UserCompanyAdd(user.Id, company.Id);
