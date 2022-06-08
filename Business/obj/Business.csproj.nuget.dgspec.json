@@ -59,6 +59,10 @@
               "target": "Package",
               "version": "[5.0.0, )"
             },
+            "ExcelDataReader": {
+              "target": "Package",
+              "version": "[3.6.0, )"
+            },
             "FluentValidation": {
               "target": "Package",
               "version": "[11.0.2, )"
@@ -258,6 +262,12 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Http.Features": {
+              "target": "Package",
+              "version": "[5.0.17, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
