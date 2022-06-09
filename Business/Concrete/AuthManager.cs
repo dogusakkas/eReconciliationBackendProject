@@ -1,9 +1,9 @@
 ﻿using Business.Abstract;
 using Business.Constans;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Transaction;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Entities.Concrete;
-using Core.Extensions.Aspects.Transaction;
 using Core.Utilities.Hashing;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
@@ -103,12 +103,6 @@ namespace Business.Concrete
                 PasswordSalt = passwordSalt,
                 Name = userForRegister.Name
             };
-
-
-            //Validation 
-
-            //ValidationTool.Validate(new UserValidator(), user);
-            //ValidationTool.Validate(new CompanyValidator(), company);
 
 
             _userService.Add(user);

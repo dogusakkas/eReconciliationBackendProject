@@ -1,9 +1,10 @@
 ﻿using Business.Abstract;
 using Business.Constans;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.AutoFac.Validation;
+using Core.Aspects.Caching;
+using Core.Aspects.Transaction;
 using Core.Entities.Concrete;
-using Core.Extensions.Aspects.AutoFac.Validation;
-using Core.Extensions.Aspects.Transaction;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
@@ -25,6 +26,7 @@ namespace Business.Concrete
             _companyDal = companyDal;
         }
 
+        [CacheRemoveAspect("ICompanyService.Get")]
         [ValidationAspect(typeof(CompanyValidator))]
         public IResult Add(Company company)
         {
@@ -32,6 +34,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.AddedCompany);
         }
 
+        [CacheRemoveAspect("ICompanyService.Get")]
         [ValidationAspect(typeof(CompanyValidator))]
         [TransactionScopeAspect]
         public IResult AddCompanyAndUserCompany(CompanyDto companyDto)
@@ -54,27 +57,32 @@ namespace Business.Concrete
 
         }
 
+        [CacheAspect(60)]
         public IDataResult<Company> GetById(int id)
         {
             return new SuccessDataResult<Company>(_companyDal.Get(x => x.Id == id));
         }
 
+        [CacheAspect(60)]
         public IDataResult<UserCompany> GetCompany(int userId)
         {
             return new SuccessDataResult<UserCompany>(_companyDal.GetCompany(userId));
         }
 
+        [CacheAspect(60)]
         public IDataResult<List<Company>> GetList()
         {
             return new SuccessDataResult<List<Company>>(_companyDal.GetList());
         }
 
+        [CacheRemoveAspect("ICompanyService.Get")]
         public IResult Update(Company company)
         {
             _companyDal.Update(company);
             return new SuccessResult(Messages.UpdateCompany);
         }
 
+        [CacheRemoveAspect("ICompanyService.Get")]
         public IResult UserCompanyAdd(int userId, int companyId)
         {
             _companyDal.UserCompanyAdd(userId, companyId);

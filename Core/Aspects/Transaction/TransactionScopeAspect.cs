@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
 
-namespace Core.Extensions.Aspects.Transaction
+namespace Core.Aspects.Transaction
 {
     public class TransactionScopeAspect : MethodInterception
     {

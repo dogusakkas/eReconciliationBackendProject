@@ -1,9 +1,5 @@
 ﻿using Business.Abstract;
-using Business.ValidationRules.FluentValidation;
-using Core.Extensions.Aspects.AutoFac.Validation;
 using Entities.Concrete;
-using Entities.Dtos;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
