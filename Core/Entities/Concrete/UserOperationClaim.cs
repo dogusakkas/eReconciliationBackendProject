@@ -13,6 +13,6 @@ namespace Core.Entities.Concrete
         public int OperationClaimId { get; set; }
         public int CompanyId { get; set; }
         public DateTime AddedAt { get; set; }
-        public string IsActive { get; set; }
+        public bool IsActive { get; set; }
     }
 }

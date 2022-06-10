@@ -1,6 +1,8 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects;
 using Business.Constans;
 using Core.Aspects.Caching;
+using Core.Aspects.Performance;
 using Core.Aspects.Transaction;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
@@ -26,6 +28,8 @@ namespace Business.Concrete
             _currencyAccountService = currencyAccountService;
         }
 
+        [PerformanceAspect(2)]
+        [SecuredOperation("BaBsReconciliation.Add,Admin")]
         [CacheRemoveAspect("IBaBsReconciliationService.Get")]
         public IResult Add(BaBsReconciliation baBsReconciliation)
         {
@@ -33,6 +37,8 @@ namespace Business.Concrete
             return new SuccessResult(Messages.AddedAccountReconciliation);
         }
 
+        [PerformanceAspect(2)]
+        [SecuredOperation("BaBsReconciliation.Add,Admin")]
         [CacheRemoveAspect("IBaBsReconciliationService.Get")]
         [TransactionScopeAspect]
         public IResult AddToExcel(string filePath, int companyId)
@@ -82,6 +88,8 @@ namespace Business.Concrete
 
         }
 
+        [PerformanceAspect(2)]
+        [SecuredOperation("BaBsReconciliation.Delete,Admin")]
         [CacheRemoveAspect("IBaBsReconciliationService.Get")]
         public IResult Delete(BaBsReconciliation baBsReconciliation)
         {
@@ -89,6 +97,8 @@ namespace Business.Concrete
             return new SuccessResult(Messages.DeletedBaBsReconciliation);
         }
 
+        [PerformanceAspect(2)]
+        [SecuredOperation("BaBsReconciliation.Get,Admin")]
         [CacheAspect(60)]
         public IDataResult<BaBsReconciliation> GetById(int id)
         {
@@ -96,12 +106,16 @@ namespace Business.Concrete
 
         }
 
+        [PerformanceAspect(2)]
+        [SecuredOperation("BaBsReconciliation.GetList,Admin")]
         [CacheAspect(60)]
         public IDataResult<List<BaBsReconciliation>> GetList(int companyId)
         {
             return new SuccessDataResult<List<BaBsReconciliation>>(_baBsReconciliationDal.GetList(x => x.CompanyId == companyId));
         }
 
+        [PerformanceAspect(2)]
+        [SecuredOperation("BaBsReconciliation.Update,Admin")]
         [CacheRemoveAspect("IBaBsReconciliationService.Get")]
         public IResult Update(BaBsReconciliation baBsReconciliation)
         {

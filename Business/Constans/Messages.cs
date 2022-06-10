@@ -22,9 +22,9 @@ namespace Business.Constans
         public static string UserMailConfirmSuccessful = "Mailiniz başarıyla onaylandı.";
         public static string MailAlreadyConfirm = "Mailiniz zaten onaylı.";
         public static string MailConfirmTimeHasNotExpired = "Mail onayınızı 3 dakikada 1 defa gönderebilirsiniz ";
-       
+
         // Mail Parameter
-        public static string MailParameterUpdated= "Mail parametreleri başarıyla güncellendi";
+        public static string MailParameterUpdated = "Mail parametreleri başarıyla güncellendi";
         public static string MailSendSuccessful = "Mail başarıyla gönderildi";
         public static string MailConfirmSendSuccessful = "Onay maili tekrar gönderildi";
 
@@ -57,6 +57,16 @@ namespace Business.Constans
         public static string AddedBaBsReconciliationDetail = "BaBs detay kaydı başarıyla eklendi";
         public static string UpdatedBaBsReconciliationDetail = "BaBs detay kaydı başarıyla güncellendi";
         public static string DeletedBaBsReconciliationDetail = "BaBs detay kaydı başarıyla silindi";
+
+        // Operation Claim
+        public static string AddedOperationClaim = "Yetki başarıyla eklendi";
+        public static string UpdatedOperationClaim = "Yetki başarıyla güncellendi";
+        public static string DeletedOperationClaim = "Yetki başarıyla silindi";
+
+        // User Operation Claim
+        public static string AddedUserOperationClaim = "Kullanıcıya yetki başarıyla eklendi";
+        public static string UpdatedUserOperationClaim = "Kullanıcıya yetki başarıyla güncellendi";
+        public static string DeletedUserOperationClaim = "Kullanıcıya yetki başarıyla silindi";
 
 
     }
