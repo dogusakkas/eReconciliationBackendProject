@@ -8,6 +8,7 @@ using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.Dtos;
 using ExcelDataReader;
 using System;
 using System.Collections.Generic;
@@ -21,11 +22,17 @@ namespace Business.Concrete
     {
         private readonly IAccountReconciliationDal _accountReconciliationDal;
         private readonly ICurrencyAccountService _currencyAccountService;
+        private readonly IMailService _mailService;
+        private readonly IMailTemplateService _mailTemplateService;
+        private readonly IMailParameterService _mailParameterService;
 
-        public AccountReconciliationManager(IAccountReconciliationDal accountReconciliationDal, ICurrencyAccountService currencyAccountService)
+        public AccountReconciliationManager(IAccountReconciliationDal accountReconciliationDal, ICurrencyAccountService currencyAccountService, IMailService mailService, IMailTemplateService mailTemplateService, IMailParameterService mailParameterService)
         {
             _accountReconciliationDal = accountReconciliationDal;
             _currencyAccountService = currencyAccountService;
+            _mailService = mailService;
+            _mailTemplateService = mailTemplateService;
+            _mailParameterService = mailParameterService;
         }
 
         [PerformanceAspect(2)]
@@ -33,6 +40,7 @@ namespace Business.Concrete
         [CacheRemoveAspect("IAccountReconciliationService.Get")]
         public IResult Add(AccountReconciliation accountReconciliation)
         {
+            string guid = Guid.NewGuid().ToString();
             _accountReconciliationDal.Add(accountReconciliation);
             return new SuccessResult(Messages.AddedAccountReconciliation);
         }
@@ -63,17 +71,18 @@ namespace Business.Concrete
                             double credit = reader.GetDouble(5);
 
                             int currencyAccountId = _currencyAccountService.GetByCode(code, companyId).Data.Id;
+                            string guid = Guid.NewGuid().ToString();
 
                             AccountReconciliation accountReconciliation = new AccountReconciliation()
                             {
                                 CompanyId = companyId,
                                 CurrencyAccountId = currencyAccountId,
-                                CurrencyCredit =Convert.ToDecimal(credit),
+                                CurrencyCredit = Convert.ToDecimal(credit),
                                 CurrencyDebit = Convert.ToDecimal(debit),
                                 CurrencyId = Convert.ToInt16(currencyId),
                                 StartingDate = startingDate,
-                                EndingDate = endingDate
-
+                                EndingDate = endingDate,
+                                Guid = guid
                             };
 
                             _accountReconciliationDal.Add(accountReconciliation);
@@ -98,6 +107,12 @@ namespace Business.Concrete
         }
 
         [PerformanceAspect(2)]
+        public IDataResult<AccountReconciliation> GetByCode(string code)
+        {
+            return new SuccessDataResult<AccountReconciliation>(_accountReconciliationDal.Get(x => x.Guid == code));
+        }
+
+        [PerformanceAspect(2)]
         [SecuredOperation("AccountReconciliation.Get,Admin")]
         [CacheAspect(60)]
         public IDataResult<AccountReconciliation> GetById(int id)
@@ -114,6 +129,55 @@ namespace Business.Concrete
             return new SuccessDataResult<List<AccountReconciliation>>(_accountReconciliationDal.GetList(x => x.CompanyId == companyId));
         }
 
+        public IDataResult<List<AccountReconciliationDto>> GetListDto(int companyId)
+        {
+            return new SuccessDataResult<List<AccountReconciliationDto>>(_accountReconciliationDal.GetAllDto(companyId));
+        }
+
+
+        [PerformanceAspect(2)]
+        [SecuredOperation("AccountReconciliation.SendMail,Admin")]
+        public IResult SendReconciliationMail(AccountReconciliationDto accountReconciliationDto)
+        {
+
+            string subject = "Mütakabat Maili";
+            string body = $"Şirket Adımız : {accountReconciliationDto.CompanyName} <br /> " +
+                $"Şirket Vergi Dairesi : {accountReconciliationDto.CompanyTaxDepartment} <br /> " +
+                $"Şirket Vergi Numarası : {accountReconciliationDto.CompanyTaxIdDepartment} <br /><hr> " +
+
+                $"Sizin Şirket : {accountReconciliationDto.AccountName} <br /> " +
+                $"Sizin Şirket Vergi Dairesi : {accountReconciliationDto.AccountTaxDepartment} <br /> " +
+                $"Sizin Şirket Vergi Numarası : {accountReconciliationDto.AccountTaxIdNumber} <br /><hr> " +
+
+                $"Borç : {accountReconciliationDto.CurrencyDebit} {accountReconciliationDto.CurrencyCode} <br /> " +
+                $"Borç Alacak : {accountReconciliationDto.CurrencyCredit} {accountReconciliationDto.CurrencyCode} <br /> ";
+
+
+            string link = "https://localhost:7022/api/AccountReconciliations/GetByCode?code=" + accountReconciliationDto.Guid;
+            string linkDescription = "Mütakabat Cevaplamak için Tıklayın";
+
+            var mailTemplate = _mailTemplateService.GetByTemplateName("Kayıt", 6);
+            string templateBody = mailTemplate.Data.Value;
+            templateBody = templateBody.Replace("{{title}}", subject);
+            templateBody = templateBody.Replace("{{message}}", body);
+            templateBody = templateBody.Replace("{{link}}", link);
+            templateBody = templateBody.Replace("{{linkDescription}}", linkDescription);
+
+            var mailParameter = _mailParameterService.Get(6);
+            Entities.Dtos.SendMailDto sendMailDto = new Entities.Dtos.SendMailDto()
+            {
+                mailParameter = mailParameter.Data,
+                email = accountReconciliationDto.AccountEmail,
+                subject = "Kullanıcı Kayıt Onay Maili",
+                body = templateBody
+            };
+
+            _mailService.SendMail(sendMailDto);
+
+            return new SuccessResult(Messages.MailSendSuccessful);
+
+        }
+
         [PerformanceAspect(2)]
         [SecuredOperation("AccountReconciliation.Update,Admin")]
         [CacheRemoveAspect("IAccountReconciliationService.Get")]
@@ -122,5 +186,7 @@ namespace Business.Concrete
             _accountReconciliationDal.Update(accountReconciliation);
             return new SuccessResult(Messages.DeletedAccountReconciliation);
         }
+
+        
     }
 }

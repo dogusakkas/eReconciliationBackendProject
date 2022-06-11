@@ -11,7 +11,7 @@ namespace Entities.Concrete
     {
         public int Id { get; set; }
         public int CompanyId { get; set; }
-        public int CurrecnyAccountId { get; set; }
+        public int CurrencyAccountId { get; set; }
         public string Type { get; set; }
         public int Mounth { get; set; }
         public int Year { get; set; }
@@ -24,5 +24,6 @@ namespace Entities.Concrete
         public bool? IsResultSucceed { get; set; }
         public DateTime? ResultDate { get; set; }
         public string? ResultNote { get; set; }
+        public string? Guid { get; set; }
     }
 }
